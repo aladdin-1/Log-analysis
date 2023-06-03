@@ -1,0 +1,86 @@
+import numpy as np
+from sklearn.model_selection import train_test_split
+from keras.models import Model
+from keras.layers import Input, Embedding, LSTM, Dense
+from keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from keras.utils import to_categorical
+
+# tokenize texts and create a tokenizer
+def tokenize_texts(texts, num_words):
+    tokenizer = Tokenizer(num_words=num_words, oov_token='<OOV>')
+    tokenizer.fit_on_texts(texts)
+    return tokenizer
+
+# read text file and split the text into sentences
+def read_text_file(file_path):
+    with open(file_path, 'r') as file:
+        return file.read().strip().split('at 2014')
+
+# preprocess texts by converting them to sequences and padding them
+def preprocess_texts(texts, tokenizer, max_length):
+    sequences = tokenizer.texts_to_sequences(texts)
+    padded_sequences = pad_sequences(sequences, maxlen=max_length, padding='post')
+    return padded_sequences
+
+# to create the model architecture
+def create_model(vocab_size, max_input_length):
+    # Encoder
+    encoder_inputs = Input(shape=(max_input_length,))
+    encoder_embedding = Embedding(vocab_size, 128)(encoder_inputs)
+    encoder_lstm = LSTM(256, return_state=True)
+    _, state_h, state_c = encoder_lstm(encoder_embedding)
+    encoder_states = [state_h, state_c]
+
+    # Decoder
+    decoder_inputs = Input(shape=(max_input_length,))
+    decoder_embedding = Embedding(vocab_size, 128)(decoder_inputs)
+    decoder_lstm = LSTM(256, return_sequences=True, return_state=True)
+    decoder_outputs, _, _ = decoder_lstm(decoder_embedding, initial_state=encoder_states)
+    decoder_dense = Dense(vocab_size, activation='softmax')
+    decoder_outputs = decoder_dense(decoder_outputs)
+
+    # Model
+    model = Model([encoder_inputs, decoder_inputs], decoder_outputs)
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    return model
+
+# create the inference models for encoder and decoder
+def create_inference_model(model):
+    # Encoder
+    encoder_inputs = model.input[0]
+    encoder_outputs, state_h_enc, state_c_enc = model.layers[4].output
+    encoder_states = [state_h_enc, state_c_enc]
+    encoder_model = Model(encoder_inputs, encoder_states)
+
+    # Decoder
+    decoder_inputs = model.input[1]
+    decoder_state_input_h = Input(shape=(256,))
+    decoder_state_input_c = Input(shape=(256,))
+    decoder_states_inputs = [decoder_state_input_h, decoder_state_input_c]
+
+    decoder_embedding = model.layers[3]
+    decoder_lstm = model.layers[5]
+    decoder_dense = model.layers[6]
+
+    decoder_outputs, state_h_dec, state_c_dec = decoder_lstm(decoder_embedding(decoder_inputs), initial_state=decoder_states_inputs)
+    decoder_states = [state_h_dec, state_c_dec]
+    decoder_outputs = decoder_dense(decoder_outputs)
+
+    decoder_model = Model([decoder_inputs] + decoder_states_inputs, [decoder_outputs] + decoder_states)
+
+    return encoder_model, decoder_model
+
+# decode the sequence
+def decode_sequence(input_seq, encoder_model, decoder_model, tokenizer, max_length):
+    states_value = encoder_model.predict(input_seq)
+    target_seq = np.zeros((1, 1))
+    target_seq[0, 0] = tokenizer.word_index['<OOV>']
+
+    stop_condition = False
+    decoded_sentence = ''
+
+    while not stop_condition:
+        output_tokens, h, c = decoder_model.predict([target_seq] + states_value)
+
+        sampled_token_index = np

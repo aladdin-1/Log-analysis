@@ -5,17 +5,11 @@ This project focuses on log analysis of communication between network nodes. The
 The script provided in this project allows you to extract message types from log files. It utilizes regular expressions and file processing to identify and extract input and output log messages. The script follows these steps:
 
 - Define regular expression patterns to match the log messages.
-
 - Set the path to the folder containing the log files.
-
-- Iterate over the log files in the folder.
-
+- Iterate over the log files in the folder. 
 - Open each log file, read its contents, and check if it is empty.
-
 - Use regular expressions to extract input and output log messages.
-
 - Write the extracted input and output messages to separate files.
-
 
 ## 2. Machine Learning Module
 The machine learning module included in this project provides functionality for tokenizing texts, preprocessing them for model input, creating a model architecture, and creating inference models for encoding and decoding sequences. The module utilizes the Keras library with TensorFlow backend for building and training the model. The module consists of the following functions:
@@ -37,14 +31,14 @@ These functions can be used to preprocess the log data, create the log analysis 
 ### Usage
 To use the log analysis project, follow these steps:
 
-Set up the necessary dependencies, including numpy, scikit-learn, Keras, and TensorFlow.
-Prepare the log files in the designated folder.
-Modify the regular expression patterns and the log folder path in the script for extracting message types.
-Run the script to extract the message types and generate separate input and output files.
-Modify the necessary parameters, such as vocabulary size and maximum input length, in the machine learning module.
-Preprocess the log texts using the provided functions from the machine learning module.
-Create the log analysis model using the create_model function.
-Train the model using the preprocessed log data.
-Use the create_inference_model function to create the inference models for encoding and decoding log sequences.
-Perform log analysis by using the decode_sequence function on new log sequences.
-Feel free to explore and adapt the code according to your specific log analysis requirements.
+- Set up the necessary dependencies, including numpy, scikit-learn, Keras, and TensorFlow.
+- Prepare the log files in the designated folder.
+- Modify the regular expression patterns and the log folder path in the script for extracting message types.
+- Run the script to extract the message types and generate separate input and output files.
+- Modify the necessary parameters, such as vocabulary size and maximum input length, in the machine learning module.
+- Preprocess the log texts using the provided functions from the machine learning module.
+- Create the log analysis model using the create_model function.
+- Train the model using the preprocessed log data.
+- Use the create_inference_model function to create the inference models for encoding and decoding log sequences.
+- Perform log analysis by using the decode_sequence function on new log sequences.
+- Feel free to explore and adapt the code according to your specific log analysis requirements.

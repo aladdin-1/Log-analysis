@@ -41,4 +41,3 @@ To use the log analysis project, follow these steps:
 - Train the model using the preprocessed log data.
 - Use the create_inference_model function to create the inference models for encoding and decoding log sequences.
 - Perform log analysis by using the decode_sequence function on new log sequences.
-- Feel free to explore and adapt the code according to your specific log analysis requirements.

@@ -4,13 +4,18 @@ This project focuses on log analysis of communication between network nodes. The
 ## 1. Script to Extract Message Types
 The script provided in this project allows you to extract message types from log files. It utilizes regular expressions and file processing to identify and extract input and output log messages. The script follows these steps:
 
-Define regular expression patterns to match the log messages.
-Set the path to the folder containing the log files.
-Iterate over the log files in the folder.
-Open each log file, read its contents, and check if it is empty.
-Use regular expressions to extract input and output log messages.
-Write the extracted input and output messages to separate files.
-To use the script, you need to modify the regular expression patterns and provide the correct path to the log folder. After running the script, it will process the log files in the folder, extract the message types, and save them in separate input and output files. The script also keeps track of the number of processed files.
+- Define regular expression patterns to match the log messages.
+
+- Set the path to the folder containing the log files.
+
+- Iterate over the log files in the folder.
+
+- Open each log file, read its contents, and check if it is empty.
+
+- Use regular expressions to extract input and output log messages.
+
+- Write the extracted input and output messages to separate files.
+
 
 ## 2. Machine Learning Module
 The machine learning module included in this project provides functionality for tokenizing texts, preprocessing them for model input, creating a model architecture, and creating inference models for encoding and decoding sequences. The module utilizes the Keras library with TensorFlow backend for building and training the model. The module consists of the following functions:
